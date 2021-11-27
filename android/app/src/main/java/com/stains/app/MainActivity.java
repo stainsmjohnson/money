@@ -1,4 +1,4 @@
-package com.mytestapp;
+package com.stains.app;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;
