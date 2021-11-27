@@ -1,5 +1,8 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 
 //screens
 import DashboardScreen from '../screens/Dashboard';
@@ -9,9 +12,15 @@ const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Dashbord" component={DashboardScreen} />
-      <Stack.Screen name="NewTransaction" component={NewTransactionScreen} />
+      <Stack.Screen
+        name="NewTransaction"
+        component={NewTransactionScreen}
+        options={{
+          ...TransitionPresets.ModalSlideFromBottomIOS,
+        }}
+      />
     </Stack.Navigator>
   );
 }

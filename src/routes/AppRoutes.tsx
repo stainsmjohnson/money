@@ -12,7 +12,7 @@ import DashbordStack from './DashbordStack';
 const Tab = createMaterialBottomTabNavigator();
 
 const TAB_ICONS: any = {
-  Dashboard: {
+  DashboardStack: {
     active: 'grid',
     inactive: 'grid-outline',
   },

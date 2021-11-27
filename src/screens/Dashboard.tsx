@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text, FAB } from 'react-native-paper';
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <Text>Dashbasdasdoard</Text>
       <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => console.log('Pressed')}
+        onPress={() => navigation.navigate('NewTransaction')}
       />
     </View>
   );
