@@ -8,6 +8,7 @@ import TransactionsScreen from '../screens/Transactions';
 
 //routes
 import DashbordStack from './DashbordStack';
+import TransactionStack from './TransactionStack';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -16,7 +17,7 @@ const TAB_ICONS: any = {
     active: 'grid',
     inactive: 'grid-outline',
   },
-  Transaction: {
+  TransactionStack: {
     active: 'layers',
     inactive: 'layers-outline',
   },
@@ -36,7 +37,7 @@ const MyTabs = () => {
         },
       })}>
       <Tab.Screen name="DashboardStack" component={DashbordStack} />
-      <Tab.Screen name="Transaction" component={TransactionsScreen} />
+      <Tab.Screen name="TransactionStack" component={TransactionStack} />
     </Tab.Navigator>
   );
 };

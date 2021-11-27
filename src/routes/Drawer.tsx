@@ -1,5 +1,5 @@
-import React, {useContext} from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import React, { useContext } from 'react';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -13,22 +13,23 @@ import {
   Text,
   Switch,
   Subheading,
+  useTheme,
 } from 'react-native-paper';
 //screens
 import SplashScreen from '../screens/SplashScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //routers
 import TabNavigator from './AppRoutes';
-import {View} from 'react-native';
-import {AuthContext, User} from '../utils/auth';
+import { View } from 'react-native';
+import { AuthContext, User } from '../utils/auth';
 
 const Drawer = createDrawerNavigator();
 
-const Cover: React.FC<{user: User | null}> = ({user}) => {
+const Cover: React.FC<{ user: User | null }> = ({ user }) => {
   return (
-    <View style={{padding: 16, alignItems: 'center'}}>
+    <View style={{ padding: 16, alignItems: 'center' }}>
       <View>
-        <Avatar.Image source={{uri: user?.photoURL}} size={70} />
+        <Avatar.Image source={{ uri: user?.photoURL }} size={70} />
         <Title>{user?.displayName}</Title>
         <Caption>{user?.email}</Caption>
       </View>
@@ -37,7 +38,7 @@ const Cover: React.FC<{user: User | null}> = ({user}) => {
 };
 
 function CustomDrawerContent(props: any) {
-  const {user, signOut} = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
 
   const screens = [
     {
@@ -77,16 +78,24 @@ function CustomDrawerContent(props: any) {
 }
 
 function MyDrawer() {
+  const theme = useTheme();
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
-      screenOptions={{
-        drawerStyle: {
-          backgroundColor: '#fff',
-          width: 240,
-        },
-        drawerType: 'back',
-      }}>
+      screenOptions={({ navigation: { toggleDrawer } }) => ({
+        drawerType: 'slide',
+        headerLeft: () => (
+          <Ionicons
+            name="menu-outline"
+            onPress={toggleDrawer}
+            style={{
+              paddingHorizontal: 16,
+            }}
+            size={30}
+            color={theme.colors.text}
+          />
+        ),
+      })}>
       <Drawer.Screen name="Home" component={TabNavigator} />
       <Drawer.Screen name="Settings" component={SplashScreen} />
     </Drawer.Navigator>

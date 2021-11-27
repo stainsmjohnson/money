@@ -1,7 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, FlatList } from 'react-native';
 import Modal from 'react-native-modal';
-import {TouchableRipple, Title, Caption, Text} from 'react-native-paper';
+import {
+  TouchableRipple,
+  Title,
+  Caption,
+  Text,
+  useTheme,
+  Card,
+} from 'react-native-paper';
 
 type TransactionType = {
   key: string;
@@ -17,7 +24,7 @@ const colors = {
   profit: '#58C511',
 };
 
-const Transactions = () => {
+const Transactions = ({ navigation }) => {
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -39,33 +46,14 @@ const Transactions = () => {
     <View>
       <FlatList
         data={transactions}
-        contentContainerStyle={{padding: 16}}
-        renderItem={({item}) => (
-          <Transaction {...item} toggleModal={setModalVisible} />
+        contentContainerStyle={{ padding: 16 }}
+        renderItem={({ item }) => (
+          <Transaction
+            {...item}
+            toggleModal={() => navigation.navigate('TransactionDetails')}
+          />
         )}
       />
-      <Modal
-        isVisible={modalVisible}
-        useNativeDriver
-        useNativeDriverForBackdrop
-        onBackdropPress={() => {
-          setModalVisible(!modalVisible);
-        }}
-        onBackButtonPress={() => {
-          setModalVisible(!modalVisible);
-        }}
-        onDismiss={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={{backgroundColor: '#fff', borderRadius: 4, padding: 16}}>
-          <Text>Title Something</Text>
-          <Text>
-            this is a description transaction done foe the actiion description
-          </Text>
-          <Text>+incoming money</Text>
-          <Text>$ 1205/-</Text>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -74,26 +62,16 @@ const Transaction: React.FC<{
   title: string;
   isLoss: boolean;
   amount: number;
-  toggleModal: (callback: boolean | ((previous: boolean) => boolean)) => void;
-}> = ({title, amount, isLoss, toggleModal}) => {
+  toggleModal: () => void;
+}> = ({ title, amount, isLoss, toggleModal }) => {
+  const theme = useTheme();
+  console.log(theme.colors);
   return (
-    <TouchableRipple
-      onPress={() => toggleModal(pre => !pre)}
+    <Card
+      onPress={toggleModal}
       style={{
-        backgroundColor: 'white',
         marginBottom: 16,
-        borderRadius: 4,
         overflow: 'hidden',
-
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-
-        elevation: 4,
       }}>
       <View
         style={{
@@ -111,9 +89,9 @@ const Transaction: React.FC<{
             flex: 1,
             alignItems: 'center',
           }}>
-          <View style={{flex: 1}}>
-            <Title style={{fontSize: 14}}>{title}</Title>
-            <Caption style={{fontSize: 10}}>
+          <View style={{ flex: 1 }}>
+            <Title style={{ fontSize: 14 }}>{title}</Title>
+            <Caption style={{ fontSize: 10 }}>
               12th November 2021, 10:34 am
             </Caption>
           </View>
@@ -133,7 +111,7 @@ const Transaction: React.FC<{
           </View>
         </View>
       </View>
-    </TouchableRipple>
+    </Card>
   );
 };
 
