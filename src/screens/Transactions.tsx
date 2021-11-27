@@ -17,7 +17,7 @@ const colors = {
   profit: '#58C511',
 };
 
-const HomeScreen = () => {
+const Transactions = () => {
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -137,6 +137,6 @@ const Transaction: React.FC<{
   );
 };
 
-export default HomeScreen;
+export default Transactions;
 
 const styles = StyleSheet.create({});
