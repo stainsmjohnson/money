@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 import Modal from 'react-native-modal';
-import {TouchableRipple} from 'react-native-paper';
+import {TouchableRipple, Title, Caption, Text} from 'react-native-paper';
 
 type TransactionType = {
   key: string;
@@ -71,7 +71,7 @@ const HomeScreen = () => {
 };
 
 const Transaction: React.FC<{
-  title: String;
+  title: string;
   isLoss: boolean;
   amount: number;
   toggleModal: (callback: boolean | ((previous: boolean) => boolean)) => void;
@@ -112,10 +112,12 @@ const Transaction: React.FC<{
             alignItems: 'center',
           }}>
           <View style={{flex: 1}}>
-            <Text>{title}</Text>
-            <Text style={{fontSize: 10}}>12th November 2021, 10:34 am</Text>
+            <Title style={{fontSize: 14}}>{title}</Title>
+            <Caption style={{fontSize: 10}}>
+              12th November 2021, 10:34 am
+            </Caption>
           </View>
-          <View style={{}}>
+          <View>
             <Text
               style={{
                 backgroundColor: `${isLoss ? colors.loss : colors.profit}22`,

@@ -9,9 +9,9 @@ const Tab = createMaterialBottomTabNavigator();
 
 const MyTabs = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={ScreenDashBoard} />
-      <Tab.Screen name="Settings">{() => <Text>Hello</Text>}</Tab.Screen>
+    <Tab.Navigator initialRouteName="Transaction">
+      <Tab.Screen name="Dashboard">{() => <Text>Hello</Text>}</Tab.Screen>
+      <Tab.Screen name="Transaction" component={ScreenDashBoard} />
     </Tab.Navigator>
   );
 };
