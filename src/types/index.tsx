@@ -3,7 +3,17 @@ export type Transaction = {
   amount: number;
   currency: 'INR' | 'USD';
   timestamp: number;
-  type: 'EARN' | 'SPEND' | 'HOLD' | 'FUTURE' | 'LOAN';
+  type: TransactionType;
+};
+export type TransactionType = 'EARN' | 'SPEND' | 'HOLD' | 'FUTURE' | 'LOAN';
+
+export type TransactionResponse = {
+  key?: string;
+  amount: number;
+  currency: 'INR' | 'USD';
+  timestamp: number;
+  title: string;
+  type: TransactionType;
 };
 
 export type Screen = {

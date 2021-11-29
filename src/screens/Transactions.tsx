@@ -1,47 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
-import Modal from 'react-native-modal';
-import {
-  TouchableRipple,
-  Title,
-  Caption,
-  Text,
-  useTheme,
-  Card,
-} from 'react-native-paper';
+import { Title, Caption, Text, Card } from 'react-native-paper';
 
-type TransactionType = {
-  key: string;
-  title: string;
-  amount: number;
-  currency: string;
-  date: string;
-  isLoss: boolean;
-};
+import { getAllTransactions } from '../db/db';
+import { Screen, TransactionResponse, TransactionType } from '../types';
 
 const colors = {
-  loss: '#f64332',
-  profit: '#58C511',
+  SPEND: '#f64332',
+  EARN: '#58C511',
+  HOLD: '#00FFFF',
+  FUTURE: '#FFBB00',
+  LOAN: '#FF0000',
 };
 
-const Transactions = ({ navigation }) => {
-  const [transactions, setTransactions] = useState<TransactionType[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
+const Transactions: React.FC<Screen> = ({ navigation }) => {
+  const [transactions, setTransactions] = useState<TransactionResponse[]>([]);
 
   useEffect(() => {
-    const tempData = [];
-    for (let i = 0; i < 50; i++) {
-      tempData.push({
-        key: i.toString(),
-        title: 'Gift to Anna' + i,
-        amount: 1895,
-        currency: 'INR',
-        date: '12/11/2021 12:15 AM',
-        isLoss: i % 2 == 0,
-      });
-    }
-    setTransactions(tempData);
+    getInitialData();
   }, []);
+
+  const getInitialData = async () => {
+    const allTransactions = await getAllTransactions();
+    setTransactions(allTransactions || []);
+  };
+
   return (
     <View>
       <FlatList
@@ -60,11 +43,12 @@ const Transactions = ({ navigation }) => {
 
 const Transaction: React.FC<{
   title: string;
-  isLoss: boolean;
   amount: number;
+  timestamp: number;
+  type: TransactionType;
   toggleModal: () => void;
-}> = ({ title, amount, isLoss, toggleModal }) => {
-  const theme = useTheme();
+}> = ({ title, amount, type, timestamp, toggleModal }) => {
+  const color = colors[type];
   return (
     <Card
       onPress={toggleModal}
@@ -79,7 +63,7 @@ const Transaction: React.FC<{
         <View
           style={{
             width: 10,
-            backgroundColor: isLoss ? colors.loss : colors.profit,
+            backgroundColor: color,
           }}></View>
         <View
           style={{
@@ -91,18 +75,18 @@ const Transaction: React.FC<{
           <View style={{ flex: 1 }}>
             <Title style={{ fontSize: 14 }}>{title}</Title>
             <Caption style={{ fontSize: 10 }}>
-              12th November 2021, 10:34 am
+              {new Date(timestamp).toLocaleString()}
             </Caption>
           </View>
           <View>
             <Text
               style={{
-                backgroundColor: `${isLoss ? colors.loss : colors.profit}22`,
+                backgroundColor: `${color}22`,
                 paddingHorizontal: 8,
                 borderWidth: 1,
-                borderColor: isLoss ? colors.loss : colors.profit,
+                borderColor: color,
                 borderRadius: 15,
-                color: isLoss ? colors.loss : colors.profit,
+                color: color,
                 fontSize: 12,
               }}>
               {amount}

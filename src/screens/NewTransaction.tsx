@@ -9,68 +9,89 @@ import { add } from '../db/db';
 
 type Data = {
   title: string;
+  value: 'EARN' | 'SPEND' | 'HOLD' | 'FUTURE' | 'LOAN';
   disabled?: boolean;
-  icon: React.ReactNode | undefined;
 };
 
 const NewTransaction: React.FC<Screen> = ({ navigation }) => {
   const theme = useTheme();
-  const [selectedType, setSelectedType] = useState<Data | null>(null);
+  const [selectedType, setSelectedType] = useState<any>({
+    title: 'Spend',
+    value: 'SPEND',
+    icon: (
+      <FontAwesome5
+        name="hand-holding-usd"
+        size={40}
+        color={theme.colors.text}
+      />
+    ),
+  });
+  const [amount, setAmount] = useState('');
+  const [title, setTitle] = useState('');
   const data: Data[] = [
     {
       title: 'Hold',
-      icon: (
-        <Ionicons name="pause-circle" size={40} color={theme.colors.text} />
-      ),
+      value: 'HOLD',
+      disabled: false,
     },
     {
       title: 'Spend',
-      icon: (
-        <FontAwesome5
-          name="hand-holding-usd"
-          size={40}
-          color={theme.colors.text}
-        />
-      ),
+      value: 'SPEND',
+      disabled: false,
     },
     {
       title: 'Earn',
-      icon: (
-        <MaterialCommunityIcons
-          name="cash-plus"
-          size={40}
-          color={theme.colors.text}
-        />
-      ),
+      value: 'EARN',
+      disabled: false,
     },
     {
       title: 'Future',
-      icon: (
-        <FontAwesome5 name="user-clock" size={40} color={theme.colors.text} />
-      ),
+      value: 'FUTURE',
+      disabled: false,
     },
     {
       title: 'Borrow',
-      icon: (
-        <MaterialCommunityIcons
-          name="cash-refund"
-          size={40}
-          color={theme.colors.text}
-        />
-      ),
+      value: 'LOAN',
+      disabled: false,
     },
   ];
+  const ICONS = {
+    EARN: (
+      <MaterialCommunityIcons
+        name="cash-plus"
+        size={40}
+        color={theme.colors.text}
+      />
+    ),
+    SPEND: (
+      <FontAwesome5
+        name="hand-holding-usd"
+        size={40}
+        color={theme.colors.text}
+      />
+    ),
+    HOLD: <Ionicons name="pause-circle" size={40} color={theme.colors.text} />,
+    FUTURE: (
+      <FontAwesome5 name="user-clock" size={40} color={theme.colors.text} />
+    ),
+    LOAN: (
+      <MaterialCommunityIcons
+        name="cash-refund"
+        size={40}
+        color={theme.colors.text}
+      />
+    ),
+  };
 
   const saveDetails = () => {
     const transaction: Transaction = {
-      title: 'asdasd',
-      amount: 100,
+      title,
+      amount: Number(amount),
       currency: 'INR',
-      timestamp: 39879234234,
-      type: 'EARN',
+      timestamp: new Date().getTime(),
+      type: selectedType.value,
     };
     add(transaction);
-    Alert.alert('Saved' + JSON.stringify(transaction, null, ' '));
     navigation.pop();
   };
   return (
@@ -84,13 +105,24 @@ const NewTransaction: React.FC<Screen> = ({ navigation }) => {
           ...Array.from({ length: 3 - (data.length % 3) }).map((_, k) => ({
             disabled: true,
             title: k + data.length + '',
-            icon: '',
+            value: 'SPEND',
           })),
         ]}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         renderItem={({ item, index }) => {
           const isRowStart = index % 3 == 0;
           const selected = selectedType?.title === item.title;
+
+          if (item.disabled)
+            return (
+              <View
+                style={{
+                  backgroundColor: 'transparant',
+                  flex: 1,
+                  height: 100,
+                  marginLeft: isRowStart ? 0 : 16,
+                }}></View>
+            );
           return (
             <View
               style={{
@@ -116,7 +148,7 @@ const NewTransaction: React.FC<Screen> = ({ navigation }) => {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    {item.icon}
+                    {ICONS[item.value]}
                     <Text>{item.title}</Text>
                   </Animated.View>
                 </Card>
@@ -131,12 +163,15 @@ const NewTransaction: React.FC<Screen> = ({ navigation }) => {
             <TextInput
               mode="outlined"
               label="Title"
+              value={title}
+              onChangeText={setTitle}
               style={{ marginBottom: 16 }}
             />
 
             <TextInput
               mode="outlined"
               label="Amount"
+              onChangeText={setAmount}
               style={{ flex: 1, marginBottom: 16 }}
               keyboardType="numeric"
             />
