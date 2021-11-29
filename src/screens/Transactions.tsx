@@ -65,7 +65,6 @@ const Transaction: React.FC<{
   toggleModal: () => void;
 }> = ({ title, amount, isLoss, toggleModal }) => {
   const theme = useTheme();
-  console.log(theme.colors);
   return (
     <Card
       onPress={toggleModal}

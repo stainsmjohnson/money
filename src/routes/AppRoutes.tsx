@@ -29,8 +29,6 @@ const MyTabs = () => {
       initialRouteName="Transaction"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, focused }) => {
-          console.log(route);
-
           const icons = TAB_ICONS[route.name];
           const icon = focused ? icons.active : icons.inactive;
           return <Ionicons name={icon} color={color} size={20} />;

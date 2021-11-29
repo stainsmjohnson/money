@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text, FAB } from 'react-native-paper';
 
-const Dashboard = ({ navigation }) => {
+const Dashboard: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <Text>Dashbasdasdoard</Text>
