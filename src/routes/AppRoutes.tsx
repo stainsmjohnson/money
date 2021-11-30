@@ -1,10 +1,6 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-//screens
-import TransactionsScreen from '../screens/Transactions';
 
 //routes
 import DashbordStack from './DashbordStack';

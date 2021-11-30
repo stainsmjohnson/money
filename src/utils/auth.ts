@@ -1,25 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import reactotron from 'reactotron-react-native';
 
-export const AuthContext = React.createContext<{user:User | null,signOut:() => void}>({user:null,signOut:() => {}});
+import { AuthContextType, User} from '../types/index'
 
-export type User = {
-  displayName: string;
-  email: string;
-  phoneNumber: any;
-  photoURL: string;
-  uid: string;
-};
+const defaultContext:AuthContextType = {
+  user: null,
+ loading:true,
+ signIn:() => {},
+ signOut:() => {}
+}
 
-export const useAuth = () => {
+export const AuthContext = React.createContext<AuthContextType>(defaultContext);
+
+export const getAuth = () => {
   const [user, setUser] = useState<User | null>(null);
-  // Set an initializing state whilst Firebase connects
   const [loading, setLoading] = useState(true);
 
-  // Handle user state changes
+ 
   const onAuthStateChanged: any = (user: User | null) => {
-    console.log('AUTH STATE CHANGED :-', user?.displayName);
+    reactotron.log?.('AUTH STATE CHANGED :-', user?.displayName);
     setUser(user);
     if (loading) setLoading(false);
   };
@@ -30,24 +31,26 @@ export const useAuth = () => {
     GoogleSignin.configure({
       webClientId: CLIENT_ID,
     });
-    // Get the users ID token
     const {idToken} = await GoogleSignin.signIn();
-
-    // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    const status = await auth().signInWithCredential(googleCredential);
 
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
+    if(status.additionalUserInfo?.isNewUser){
+      //add to users collection
+    
+    }
+    
+    return 
   };
 
   const signOut = () => {
     auth()
       .signOut()
-      .then(() => console.log('User signed out!'));
+      .then(() => reactotron.log?.('User signed out!'));
   };
 
   useEffect(() => {
-    console.log('CHECKING AUTHENTICATION')
+    reactotron.log?.('CHECKING AUTHENTICATION')
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber;
   }, []);
@@ -60,3 +63,7 @@ export const useAuth = () => {
   };
 };
 
+export const useAuth:() => AuthContextType = () => {
+  const user:AuthContextType  = useContext(AuthContext);
+  return user
+}

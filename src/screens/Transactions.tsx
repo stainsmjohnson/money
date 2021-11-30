@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, FlatList } from 'react-native';
 import { Title, Caption, Text, Card } from 'react-native-paper';
-
-import { getAllTransactions } from '../db/db';
 import { Screen, TransactionResponse, TransactionType } from '../types';
+import { AuthContext } from '../utils/auth';
+import firestore from '@react-native-firebase/firestore';
+import reactotron from 'reactotron-react-native';
 
 const colors = {
   SPEND: '#f64332',
@@ -14,15 +15,40 @@ const colors = {
 };
 
 const Transactions: React.FC<Screen> = ({ navigation }) => {
+  const { user } = useContext(AuthContext);
   const [transactions, setTransactions] = useState<TransactionResponse[]>([]);
 
   useEffect(() => {
-    getInitialData();
+    a();
+    // const subscriber = firestore()
+    //   .collection('Transactions')
+    //   // .where('user', '==', user?.uid)
+    //   // .where('type', '==', 'SPEND')
+    //   .orderBy('timestamp', 'desc')
+    //   .onSnapshot(querySnapshot => {
+    //     console.log('RECEIVED TRANS  ', querySnapshot, user?.uid);
+
+    //     const allTransactions: any[] = [];
+    //     querySnapshot?.forEach(documentSnapshot => {
+    //       allTransactions.push({
+    //         ...documentSnapshot.data(),
+    //         key: documentSnapshot.id,
+    //       });
+    //     });
+    //     setTransactions(allTransactions);
+    //   });
+
+    // return subscriber;
   }, []);
 
-  const getInitialData = async () => {
-    const allTransactions = await getAllTransactions();
-    setTransactions(allTransactions || []);
+  const a = async () => {
+    const b = await firestore().collection('Users').get();
+    reactotron.log?.(b.size);
+    b.forEach(async i => {
+      const bb = { key: i.id, ...i.data() };
+      let aaaa = await bb.trans.get();
+      reactotron.log?.(aaaa.data());
+    });
   };
 
   return (
@@ -99,5 +125,3 @@ const Transaction: React.FC<{
 };
 
 export default Transactions;
-
-const styles = StyleSheet.create({});

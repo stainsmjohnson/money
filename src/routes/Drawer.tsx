@@ -1,27 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import {
-  Avatar,
-  Title,
-  Caption,
-  Divider,
-  Text,
-  Switch,
-  Subheading,
-  useTheme,
-} from 'react-native-paper';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { Avatar, Title, Caption, Divider, useTheme } from 'react-native-paper';
 //screens
 import SplashScreen from '../screens/SplashScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //routers
 import TabNavigator from './AppRoutes';
 import { View } from 'react-native';
-import { AuthContext, User } from '../utils/auth';
+import { useAuth } from '../utils/auth';
+import { Screen, User } from '../types';
 
 const Drawer = createDrawerNavigator();
 
@@ -37,8 +25,8 @@ const Cover: React.FC<{ user: User | null }> = ({ user }) => {
   );
 };
 
-function CustomDrawerContent(props: any) {
-  const { user, signOut } = useContext(AuthContext);
+const CustomDrawerContent: React.FC<any> = (props: any) => {
+  const { user, signOut } = useAuth();
 
   const screens = [
     {
@@ -75,9 +63,9 @@ function CustomDrawerContent(props: any) {
       />
     </DrawerContentScrollView>
   );
-}
+};
 
-function MyDrawer() {
+const MyDrawer: React.FC<Screen> = () => {
   const theme = useTheme();
   return (
     <Drawer.Navigator
@@ -100,6 +88,6 @@ function MyDrawer() {
       <Drawer.Screen name="Settings" component={SplashScreen} />
     </Drawer.Navigator>
   );
-}
+};
 
 export default MyDrawer;

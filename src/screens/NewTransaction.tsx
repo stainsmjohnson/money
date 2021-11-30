@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { Alert, FlatList, StyleSheet, View, Animated } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { FlatList, StyleSheet, View, Animated } from 'react-native';
 import { Button, Card, Text, TextInput, useTheme } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Screen, Transaction } from '../types';
 import { add } from '../db/db';
+import { AuthContext, User } from '../utils/auth';
 
 type Data = {
   title: string;
@@ -14,6 +15,7 @@ type Data = {
 };
 
 const NewTransaction: React.FC<Screen> = ({ navigation }) => {
+  const { user } = useContext(AuthContext);
   const theme = useTheme();
   const [selectedType, setSelectedType] = useState<any>({
     title: 'Spend',
@@ -90,6 +92,7 @@ const NewTransaction: React.FC<Screen> = ({ navigation }) => {
       currency: 'INR',
       timestamp: new Date().getTime(),
       type: selectedType.value,
+      user: user.uid,
     };
     add(transaction);
     navigation.pop();
@@ -199,5 +202,3 @@ const NewTransaction: React.FC<Screen> = ({ navigation }) => {
 };
 
 export default NewTransaction;
-
-const styles = StyleSheet.create({});

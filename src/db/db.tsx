@@ -1,4 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
+import reactotron from 'reactotron-react-native';
 import { Transaction } from '../types';
 
 const COLLECTION = 'Transactions';
@@ -6,9 +7,9 @@ const COLLECTION = 'Transactions';
 export const add = async (data: Transaction) => {
   try {
     await firestore().collection(COLLECTION).add(data);
-    console.log('Transaction added!');
+    reactotron.log?.('Transaction added!');
   } catch (err: any) {
-    console.log('ERROR: ', err.message);
+    reactotron.log?.('ERROR: ', err.message);
   }
 };
 
@@ -23,7 +24,7 @@ export const getAllTransactions = async () => {
   try {
     const transactions = await firestore().collection(COLLECTION).get();
     const transformedTransactions: any[] = [];
-    console.log('Total transactions: ', transactions.size);
+    reactotron.log?.('Total transactions: ', transactions.size);
     transactions.forEach(documentSnapshot => {
       transformedTransactions.push({
         key: documentSnapshot.id,
@@ -33,7 +34,7 @@ export const getAllTransactions = async () => {
 
     return transformedTransactions;
   } catch (err) {
-    console.log('#err', err);
+    reactotron.log?.('err', err);
   }
 };
 
