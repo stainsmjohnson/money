@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text, FAB } from 'react-native-paper';
+import { Text, FAB, Headline } from 'react-native-paper';
 
 const Dashboard: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
-    <View style={{ flex: 1 }}>
-      <Text>Dashbasdasdoard</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Headline>Dashbasdasdoard</Headline>
       <FAB
         style={styles.fab}
         icon="plus"

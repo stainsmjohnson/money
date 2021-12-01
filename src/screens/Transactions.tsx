@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, FlatList } from 'react-native';
 import { Title, Caption, Text, Card } from 'react-native-paper';
 import { Screen, TransactionResponse, TransactionType } from '../types';
-import { AuthContext } from '../utils/auth';
+import { useAuth } from '../utils/auth';
 import firestore from '@react-native-firebase/firestore';
 import reactotron from 'reactotron-react-native';
 
@@ -15,41 +15,18 @@ const colors = {
 };
 
 const Transactions: React.FC<Screen> = ({ navigation }) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState<TransactionResponse[]>([]);
 
   useEffect(() => {
-    a();
-    // const subscriber = firestore()
-    //   .collection('Transactions')
-    //   // .where('user', '==', user?.uid)
-    //   // .where('type', '==', 'SPEND')
-    //   .orderBy('timestamp', 'desc')
-    //   .onSnapshot(querySnapshot => {
-    //     console.log('RECEIVED TRANS  ', querySnapshot, user?.uid);
-
-    //     const allTransactions: any[] = [];
-    //     querySnapshot?.forEach(documentSnapshot => {
-    //       allTransactions.push({
-    //         ...documentSnapshot.data(),
-    //         key: documentSnapshot.id,
-    //       });
-    //     });
-    //     setTransactions(allTransactions);
-    //   });
-
-    // return subscriber;
+    return firestore()
+      .collection('Transactions')
+      .doc(user?.uid)
+      .onSnapshot(querySnapshot => {
+        const allTransactions: any[] = querySnapshot.data()?.transactions || [];
+        setTransactions(allTransactions);
+      });
   }, []);
-
-  const a = async () => {
-    const b = await firestore().collection('Users').get();
-    reactotron.log?.(b.size);
-    b.forEach(async i => {
-      const bb = { key: i.id, ...i.data() };
-      let aaaa = await bb.trans.get();
-      reactotron.log?.(aaaa.data());
-    });
-  };
 
   return (
     <View>

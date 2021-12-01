@@ -1,12 +1,13 @@
-import React, { useState, useContext } from 'react';
-import { FlatList, StyleSheet, View, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, View, Animated } from 'react-native';
 import { Button, Card, Text, TextInput, useTheme } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Screen, Transaction } from '../types';
-import { add } from '../db/db';
-import { AuthContext, User } from '../utils/auth';
+import { Screen, Transaction, TransactionType } from '../types';
+import { useAuth } from '../utils/auth';
+import firestore from '@react-native-firebase/firestore';
+import reactotron from 'reactotron-react-native';
 
 type Data = {
   title: string;
@@ -15,7 +16,7 @@ type Data = {
 };
 
 const NewTransaction: React.FC<Screen> = ({ navigation }) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const theme = useTheme();
   const [selectedType, setSelectedType] = useState<any>({
     title: 'Spend',
@@ -57,7 +58,7 @@ const NewTransaction: React.FC<Screen> = ({ navigation }) => {
       disabled: false,
     },
   ];
-  const ICONS = {
+  const ICONS: Map<TransactionType, React.ReactNode> = {
     EARN: (
       <MaterialCommunityIcons
         name="cash-plus"
@@ -85,16 +86,33 @@ const NewTransaction: React.FC<Screen> = ({ navigation }) => {
     ),
   };
 
-  const saveDetails = () => {
+  const saveDetails = async () => {
     const transaction: Transaction = {
       title,
       amount: Number(amount),
       currency: 'INR',
       timestamp: new Date().getTime(),
       type: selectedType.value,
-      user: user.uid,
+      user: user?.uid || '',
     };
-    add(transaction);
+
+    const doc = firestore().collection('Transactions').doc(user?.uid);
+    const data = await doc.get();
+    if (data.exists) {
+      reactotron.log?.('DOC ', data.data());
+      doc
+        .update({
+          transactions: firestore.FieldValue.arrayUnion(transaction),
+        })
+        .then(val => {
+          reactotron.log?.('Updated', val);
+        });
+    } else {
+      doc.set({
+        key: user?.uid,
+        transactions: [transaction],
+      });
+    }
     navigation.pop();
   };
   return (
