@@ -9,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import TabNavigator from './AppRoutes';
 import { View } from 'react-native';
 import { useAuth } from '../utils/auth';
-import { Screen, User } from '../types';
+import { User } from '../types';
 
 const Drawer = createDrawerNavigator();
 
@@ -65,7 +65,7 @@ const CustomDrawerContent: React.FC<any> = (props: any) => {
   );
 };
 
-const MyDrawer: React.FC<Screen> = () => {
+const MyDrawer: React.FC = () => {
   const theme = useTheme();
   return (
     <Drawer.Navigator

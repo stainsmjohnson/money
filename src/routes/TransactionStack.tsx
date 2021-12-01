@@ -10,7 +10,7 @@ import TransactionDetailsScreen from '../screens/TransactionDetails';
 
 const Stack = createStackNavigator();
 
-function MyStack() {
+const MyStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Dashbord" component={TransactionsScreen} />
@@ -23,6 +23,6 @@ function MyStack() {
       />
     </Stack.Navigator>
   );
-}
+};
 
 export default MyStack;
